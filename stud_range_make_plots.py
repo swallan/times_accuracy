@@ -48,9 +48,12 @@ for F_key in Fs.keys():
             call = psturng(float(q), int(k), int(nu))
             
         except:
-            call = 3
+            call = None
         tf = time.time()
-        datas.append(1 - call)
+        if call is None:
+            datas.append(call)
+        else:
+            datas.append(1 - call)
         dt = tf - ti
         times.append(dt)
         
@@ -71,7 +74,10 @@ for F_key in Fs.keys():
     err3 = np.abs(np.array([x - gt for x in F["mp-ts"]], dtype=float))
     err4 = np.abs(np.array([x - gt for x in F["ft"]], dtype=float))
     err5 = np.abs(np.array([x - gt for x in F["dom"]], dtype=float))
-    err6 = np.abs(np.array([x - gt for x in F["psturng"]], dtype=float))
+    if F["psturng"][0] is None:
+        err6 = np.asarray([None] * len(F["psturng"]))
+    else:
+        err6 = np.abs(np.array([x - gt for x in F["psturng"]], dtype=float))
 
     
     # make a plot for each calcualtion (DATA)
