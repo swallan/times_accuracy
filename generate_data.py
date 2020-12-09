@@ -29,7 +29,7 @@ F_R = dict(), dict(), dict(), dict(), dict(), dict(), dict()
 F_T = dict(), dict(), dict(), dict(), dict(), dict(), dict()
 
 
-def compute_and_time(fun, F, T, q, k, nu, _min=6, _max=8, itr=1):
+def compute_and_time(fun, F, T, q, k, nu, _min=6, _max=26, itr=1):
     dpss = range(_min, _max, itr)
     for dps in dpss:
         print(f"dps:{dps}")
