@@ -8,7 +8,8 @@ Created on Tue Dec  8 16:36:10 2020
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from compute_cdf import cdf_dblquad, cdf_mp_ts, cdf_mp_gl, cdf_fortran, cdf_cplusplus, cdf_statsmodel
+from compute_cdf import (cdf_dblquad, cdf_mp_ts, cdf_mp_gl, cdf_fortran,
+                         cdf_cplusplus, cdf_statsmodel, cdf_cython)
 import time
 
 q_crits = [26.976, 6.825, 4.577]
@@ -17,21 +18,22 @@ nus = [10, 30, 100]
 
 from mpmath import mp
 mp.dps = 25
-
+#%%
 # indicate which you would like to have data generated for
-truths = [True, True, True, False, False, False]
-methods = [cdf_dblquad, cdf_mp_ts, cdf_mp_gl, cdf_fortran, cdf_cplusplus, cdf_statsmodel]
+truths = [False, False, False, False, True, False, False]
+methods = [cdf_dblquad, cdf_mp_ts, cdf_mp_gl, cdf_fortran, cdf_cplusplus, cdf_statsmodel, cdf_cython]
 names = ['cdf_dblquad', 'cdf_mp_ts', 'cdf_mp_gl', 'cdf_fortran', 'cdf_cplusplus',
-         'cdf_statsmodel']
+         'cdf_statsmodel', 'cdf_cython']
 
 
-F_R = dict(), dict(), dict(), dict(), dict(), dict(), dict()
-F_T = dict(), dict(), dict(), dict(), dict(), dict(), dict()
+F_R = dict(), dict(), dict(), dict(), dict(), dict(), dict(), dict()
+F_T = dict(), dict(), dict(), dict(), dict(), dict(), dict(), dict()
 
 
 def compute_and_time(fun, F, T, q, k, nu, _min=6, _max=26, itr=1):
     dpss = range(_min, _max, itr)
     for dps in dpss:
+        
         print(f"dps:{dps}")
         key = f'{q}-{k}-{nu}'
         Ti = time.time()
@@ -55,7 +57,7 @@ for q in q_crits:
                     compute_and_time(methods[i], F_R[i], F_T[i], q, k, nu)
 
 end_time = time.time()
-
+#%%
 print("saving files...")
 
 mp.dps = 25

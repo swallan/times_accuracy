@@ -82,11 +82,19 @@ def cdf_fortran(q, k, nu, *args, **kwargs):
 def cdf_cplusplus(q, k, nu, *args, **kwds):
     from scipy.stats import studentized_cdf
     if kwds.get('dps'):
-        atol = 10**(kwds.get('dps'))
+        atol = 10**-(kwds.get('dps'))
     else:
         atol = 1.49e-08
     return studentized_cdf(q, k, nu, atol=atol), None
 
 def cdf_statsmodel(q, k, nu, *args, **kwds):
     from statsmodels.stats.libqsturng import psturng
-    return psturng(q, k, nu)
+    return psturng(q, k, nu), None
+
+def cdf_cython(q, k, nu, *args, **kwds):
+    from scipy.stats import studentized_t
+    atol = 10**-(kwds.get('dps', 8))
+
+    return studentized_t._cdf((q, atol), k, nu), None
+
+
