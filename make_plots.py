@@ -120,5 +120,4 @@ for key_comp in Fs['cdf_mp_ts']:
 #     plt.xlabel('degree of precision')
 #     plt.savefig(f"images/q{str(q).strip('.')}-k{int(k)}-nu{int(nu)}_TIME.png", dpi=250)
 #     plt.clf()
-    
 
