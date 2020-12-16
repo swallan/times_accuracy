@@ -89,12 +89,15 @@ def cdf_cplusplus(q, k, nu, *args, **kwds):
 
 def cdf_statsmodel(q, k, nu, *args, **kwds):
     from statsmodels.stats.libqsturng import psturng
-    return psturng(q, k, nu), None
+    try:
+        return 1 - psturng(q, k, nu).item(), None
+    except: 
+        return 2, None
 
 def cdf_cython(q, k, nu, *args, **kwds):
-    from scipy.stats import studentized_t
+    from scipy.stats import studentized_range
     atol = 10**-(kwds.get('dps', 8))
-
-    return studentized_t._cdf((q, atol), k, nu), None
+    # print(atol)
+    return studentized_range._cdf((q, atol), k, nu).item(), None
 
 
