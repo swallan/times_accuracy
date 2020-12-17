@@ -11,14 +11,30 @@ Created on Tue Dec  8 16:36:10 2020
 from compute_cdf import (cdf_dblquad, cdf_mp_ts, cdf_mp_gl, cdf_fortran,
                          cdf_cplusplus, cdf_statsmodel, cdf_cython)
 import time
+import argparse
+import sys
+import concurrent.futures
+
+
 #%%
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-d', '--dblquad', action='store_true')
+parser.add_argument('-t', '--mpts', action='store_true')
+parser.add_argument('-g', '--mpgl', action='store_true')
+parser.add_argument('-f', '--fortran', action='store_true')
+parser.add_argument('-s', '--statsmodel', action='store_true')
+parser.add_argument('-c', '--cython', action='store_true')
+arg = parser.parse_args()
+print(arg)
+
 # indicate which you would like to have data generated for
-truths = [True,  # dblquad
-          True,  # mp-ts
-          True,  # mp-gl
-          False,  # Fortran
-          False,  # statsmodel
-          False   # Cython
+truths = [arg.dblquad,  # dblquad
+          arg.mpts,  # mp-ts
+          arg.mpgl,  # mp-gl
+          arg.fortran,  # Fortran
+          arg.statsmodel,  # statsmodel
+          arg.cython   # Cython
           ]
 methods = [cdf_dblquad, cdf_mp_ts, cdf_mp_gl, cdf_fortran,
            cdf_statsmodel, cdf_cython]
@@ -26,14 +42,6 @@ names = ['cdf_dblquad', 'cdf_mp_ts', 'cdf_mp_gl', 'cdf_fortran',
          'cdf_statsmodel', 'cdf_cython']
 
 
-for i in range(len(names)):
-    _input = input(f"data for {names[i]} (enter 't' or 'f')")
-    if _input == 't':
-        truths[i] = True
-    else:
-        truths[i] = False
-        
-print(truths)
 # for i in len(truths):
 #     in_ = input(f"calculate for {names[i]} (enter 't' or 'f')")
 #     if in_ == 't':
