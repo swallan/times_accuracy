@@ -25,6 +25,15 @@ methods = [cdf_dblquad, cdf_mp_ts, cdf_mp_gl, cdf_fortran,
 names = ['cdf_dblquad', 'cdf_mp_ts', 'cdf_mp_gl', 'cdf_fortran',
          'cdf_statsmodel', 'cdf_cython']
 
+
+for i in range(len(names)):
+    _input = input(f"data for {names[i]} (enter 't' or 'f')")
+    if _input == 't':
+        truths[i] = True
+    else:
+        truths[i] = False
+        
+print(truths)
 # for i in len(truths):
 #     in_ = input(f"calculate for {names[i]} (enter 't' or 'f')")
 #     if in_ == 't':
