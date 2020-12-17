@@ -24,35 +24,45 @@ methods = [cdf_dblquad, cdf_mp_ts, cdf_mp_gl, cdf_fortran,
            cdf_statsmodel, cdf_cython]
 names = ['cdf_dblquad', 'cdf_mp_ts', 'cdf_mp_gl', 'cdf_fortran',
          'cdf_statsmodel', 'cdf_cython']
+
+# for i in len(truths):
+#     in_ = input(f"calculate for {names[i]} (enter 't' or 'f')")
+#     if in_ == 't':
+#         truth
 #%%
 
 # ps = [0.001, 0.01, 0.05, 0.5, 0.9, 0.99]
 # ks = [3, 10, 20]
 # nus = [1, 10, 120]
 
-# nu = 1, k =10
+# # nu = 1, k =10
 
 # def wrapper(a, k, nu):
 #     import scipy.optimize as optimize
-#     from scipy.stats.statlib import prtrng
+#     from scipy.stats import studentized_range
 #     def func(q, k, nu):
-#         return a - (1 - prtrng(q, nu, k)[0])
+#         return a - (1 - cdf_cython(q , k, nu, dps=10)[0])
 #     return optimize.root(func, 3, args=(k, nu))
 
 # combinations = dict()
+# impossible_sets = dict()
 # for p in ps:
 #     combinations[p] = []
-#     # impossible_sets[p] = []
+#     impossible_sets[p] = []
 #     for k in ks:
 #         for nu in nus:
-#             q_wrap = wrapper(p, k, nu)
-#             if q_wrap.success:
-#                 q = (q_wrap.x).item()
-#                 combinations[p].append((q, k, nu))
-#             else:
-#                 pass
-#                 # q = None
-#                 # impossible_sets[p].append((q, k, nu))
+#             try:
+#                 q_wrap = wrapper(p, k, nu)
+#                 if q_wrap.success:
+#                     q = (q_wrap.x).item()
+#                     combinations[p].append((q, k, nu))
+#                 else:
+                    
+#                     q = None
+#                     impossible_sets[p].append((q, k, nu))
+#             except:
+#                 q = None
+#                 impossible_sets[p].append((q, k, nu))
 
 combinations = {
     0.001: [(1476.5333964074937, 3, 1),
@@ -145,7 +155,11 @@ def compute_and_time(fun, F, T, q, k, nu, _min=6, _max=26, itr=1):
         print(f"dps:{dps}")
         key = f'{q}-{k}-{nu}'
         Ti = time.time()
-        F2, err2 = fun(q, k, nu, dps=dps)
+        try:
+            F2, err2 = fun(q, k, nu, dps=dps)
+        except Exception as e:
+            print(e)
+            F2, err2 = 2, 2
         Tf = time.time()
         dt = Tf - Ti
         F[key].append(F2)
