@@ -9,7 +9,7 @@ Created on Tue Dec  8 16:36:10 2020
 # -*- coding: utf-8 -*-
 
 from compute_cdf import (cdf_dblquad, cdf_mp_ts, cdf_mp_gl, cdf_fortran,
-                         cdf_cplusplus, cdf_statsmodel, cdf_cython)
+                         cdf_cplusplus, cdf_statsmodel, cdf_cython, cdf_cython)
 import time
 import argparse
 import sys
@@ -25,6 +25,8 @@ parser.add_argument('-g', '--mpgl', action='store_true')
 parser.add_argument('-f', '--fortran', action='store_true')
 parser.add_argument('-s', '--statsmodel', action='store_true')
 parser.add_argument('-c', '--cython', action='store_true')
+parser.add_argument('-c_o', '--cython_old', action='store_true')
+parser.add_argument('-cpp', '--cplusplus', action='store_true')
 arg = parser.parse_args()
 print(arg)
 
@@ -34,12 +36,14 @@ truths = [arg.dblquad,  # dblquad
           arg.mpgl,  # mp-gl
           arg.fortran,  # Fortran
           arg.statsmodel,  # statsmodel
-          arg.cython   # Cython
+          arg.cython,   # Cython
+          arg.cplusplus,
+          arg.cython_old
           ]
 methods = [cdf_dblquad, cdf_mp_ts, cdf_mp_gl, cdf_fortran,
-           cdf_statsmodel, cdf_cython]
+           cdf_statsmodel, cdf_cython, cdf_cplusplus, cdf_cython]
 names = ['cdf_dblquad', 'cdf_mp_ts', 'cdf_mp_gl', 'cdf_fortran',
-         'cdf_statsmodel', 'cdf_cython']
+         'cdf_statsmodel', 'cdf_cython', 'cdf_cplusplus', 'cdf_cython_old']
 
 
 # for i in len(truths):

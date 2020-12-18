@@ -20,14 +20,15 @@ mp.dps = 30
 # read in data and times from string.
 
 Fs, Ts = dict(), dict()
-names = ['cdf_dblquad', 'cdf_mp_ts', 'cdf_mp_gl', 'cdf_fortran', 'cdf_cplusplus',
-         'cdf_statsmodel', 'cdf_cython']
+names = ['cdf_dblquad', 'cdf_mp_ts', 'cdf_mp_gl', 'cdf_fortran',
+          'cdf_cython', 'cdf_cython_old', 'cdf_statsmodel', ]
 
 
 for name in names:
     try:
         with open(f"data/{name}_data.txt", 'r') as in_:
             data = in_.read()
+            data = data.replace('nan', '2')
             f = f'Fs["{name}"] = {data}'
             exec(f.replace('array', ''))
     except Exception as e:
@@ -62,12 +63,19 @@ for key_comp in Fs['cdf_mp_ts']:
     q, k, nu = key_comp.split("-")
     print(key_comp)
     
-
+    failed = []
+    
+    
+    
 
     gt = Fs["cdf_mp_ts"][key_comp][-1]    
     err = [np.abs([x - gt for x in np.ravel(Fs[key_name][key_comp])])
                    for key_name in Fs.keys()]
 
+    for key_name in Fs.keys():
+        l = np.abs([x - gt for x in np.ravel(Fs[key_name][key_comp])])
+        if np.any(l > .5):
+            failed.append(key_name)
     # make a plot for each calcualtion (DATA)
     #%%
    
@@ -76,34 +84,35 @@ for key_comp in Fs['cdf_mp_ts']:
     legend_nice_label = [key[4:] for key in Fs.keys()]
     plt.legend(legend_nice_label)
     plt.xticks(range(6, 26, 1))
-    plt.title(f'Magnitude Difference from \'mp-ts\'@{_max-1}: p={float(gt):.10f} \n'
+    plt.title(f'Magnitude Difference from \'mp-ts\'@{_max-1}: alpha={1-float(gt):.3f} \n'
               f'q: {q}, k: {k}, nu: {nu}, ')
     plt.ylabel('magnitude difference')
     plt.xlabel('degree of precision')
     #%%
-    
-    plt.savefig(f"images/q{str(q).strip('.')}-k{int(k)}-nu{int(nu)}_DATA.png", dpi=250)
+    if len(failed) > 0:
+        plt.figtext(0.99, 0.01, f'possible failures: {failed}, meaning the error was over .5', horizontalalignment='right')
+    plt.savefig(f"images/data/alpha{1-float(gt):.3f}-q{float(q)}-k{int(k)}-nu{int(nu)}_DATA.png", dpi=250)
     plt.clf()
     plt.close()
     
     
     
-    plt.figure(figsize=(9,6), dpi=250)
-    times = [Ts[key_name][key_comp] for key_name in Ts.keys()]
-    plt.semilogy(*[x for y in zip([dpss]*len(err), times) for x in y], marker='o', markersize=2)
-    legend_nice_label = [key[4:] for key in Fs.keys()]
-    plt.legend(legend_nice_label)
-    plt.xticks(range(6, 26, 1))
-    plt.title(f'Execution Time @ Degree Precision \'mp-ts\'@{_max-1}: p={float(gt):.10f}\n'
-              f'q: {q}, k: {k}, nu: {nu}')
-    plt.ylabel('time (seconds)')
-    plt.xlabel('degree of precision')
-    plt.figtext(0.99, 0.01, '* `mp-ts`, `mp-gl`, and `dblquad` were run on a different system', horizontalalignment='right')
-    #%%
+    # plt.figure(figsize=(9,6), dpi=250)
+    # times = [Ts[key_name][key_comp] for key_name in Ts.keys()]
+    # plt.semilogy(*[x for y in zip([dpss]*len(err), times) for x in y], marker='o', markersize=2)
+    # legend_nice_label = [key[4:] for key in Fs.keys()]
+    # plt.legend(legend_nice_label)
+    # plt.xticks(range(6, 26, 1))
+    # plt.title(f'Execution Time @ Degree Precision \'mp-ts\'@{_max-1}: alpha={1-float(gt):.3f}\n'
+    #           f'q: {q}, k: {k}, nu: {nu}')
+    # plt.ylabel('time (seconds)')
+    # plt.xlabel('degree of precision')
+    # plt.figtext(0.99, 0.01, '* `mp-ts`, `mp-gl`, and `dblquad` were run on a different system', horizontalalignment='right')
+    # #%%
     
-    plt.savefig(f"images/q{str(q).strip('.')}-k{int(k)}-nu{int(nu)}_TIME.png", dpi=250)
-    plt.clf()
-    plt.close()
+    # plt.savefig(f"images/time/q{str(q).strip('.')}-k{int(k)}-nu{int(nu)}_TIME.png", dpi=250)
+    # plt.clf()
+    # plt.close()
     
     
     
