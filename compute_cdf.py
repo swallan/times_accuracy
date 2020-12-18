@@ -95,9 +95,9 @@ def cdf_statsmodel(q, k, nu, *args, **kwds):
         return 2, None
 
 def cdf_cython(q, k, nu, *args, **kwds):
-    from scipy.stats import studentized_range
+    from scipy.stats import studentized_t as srd
     atol = 10**-(kwds.get('dps', 8))
     # print(atol)
-    return studentized_range._cdf((q, atol), k, nu).item(), None
+    return srd._cdf((q, atol), k, nu), None
 
 
