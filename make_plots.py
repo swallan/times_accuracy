@@ -26,14 +26,14 @@ names = ['cdf_dblquad', 'cdf_mp_ts', 'cdf_mp_gl', 'cdf_fortran', 'cdf_cplusplus'
 
 for name in names:
     try:
-        with open(f"data/{name}_data.txt", 'r') as in_:
+        with open(f"./data/{name}_data.txt", 'r') as in_:
             data = in_.read()
             f = f'Fs["{name}"] = {data}'
             exec(f.replace('array', ''))
     except Exception as e:
         print(f"[FileError] Data may not be loaded for {name}, errmsg= {e}")
     try:
-        with open(f"data/{name}_time.txt", 'r') as in_:
+        with open(f"./data/{name}_time.txt", 'r') as in_:
             data = in_.read()
             f = f'Ts["{name}"] = {data}'
             exec(f.replace('array', ''))
