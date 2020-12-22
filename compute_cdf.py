@@ -87,7 +87,7 @@ def cdf_cplusplus(q, k, nu, *args, **kwds):
         atol = 1.49e-08
     return studentized_cdf(q, k, nu, atol=atol), None
 
-def cdf_statsmodel(q, k, nu, *args, **kwds):
+def cdf_statsmodel(q, k,    nu, *args, **kwds):
     from statsmodels.stats.libqsturng import psturng
     try:
         return 1 - psturng(q, k, nu).item(), None
@@ -98,6 +98,13 @@ def cdf_cython(q, k, nu, *args, **kwds):
     from scipy.stats import studentized_range as srd
     atol = 10**-(kwds.get('dps', 8))
     # print(atol)
-    return srd._cdf((q, atol), k, nu), None
+    return mpf(float(srd._cdf((q, atol), k, nu))), None
 
 
+
+# q, k, nu = 7.213394084352993, 10, 10
+# dpss = range(6, 26)
+# data = []
+# for dps in dpss:
+#     data.append(cdf_cython(q, k, nu, dps=dps)[0].item())
+# print(data)
