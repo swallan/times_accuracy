@@ -52,17 +52,17 @@ names = ['cdf_dblquad', 'cdf_mp_ts', 'cdf_mp_gl', 'cdf_fortran',
 #         truth
 #%%
 
-# ps = [0.001, 0.01, 0.05, 0.5, 0.9, 0.99]
-# ks = [3, 10, 20]
-# nus = [1, 10, 120]
+ps = [0.001, 0.01, 0.05, 0.5, 0.9, 0.99]
+ks = [3, 10, 20]
+nus = [1, 10, 120]
 
-# # nu = 1, k =10
+# nu = 1, k =10
 
 # def wrapper(a, k, nu):
 #     import scipy.optimize as optimize
-#     from scipy.stats import studentized_range
+#     # from scipy.stats import studentized_range
 #     def func(q, k, nu):
-#         return a - (1 - cdf_cython(q , k, nu, dps=10)[0])
+#         return a - (1 - cdf_fortran(q , k, nu, dps=10)[0])
 #     return optimize.root(func, 3, args=(k, nu))
 
 # combinations = dict()

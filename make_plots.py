@@ -21,7 +21,7 @@ mp.dps = 30
 
 Fs, Ts = dict(), dict()
 names = ['cdf_dblquad', 'cdf_mp_ts', 'cdf_mp_gl', 'cdf_fortran',
-          'cdf_cython', 'cdf_cython_old', 'cdf_statsmodel', ]
+           'cdf_statsmodel','cdf_cython_old','cdf_cython'] #,
 
 
 for name in names:
