@@ -55,7 +55,6 @@ names = ['cdf_dblquad', 'cdf_mp_ts', 'cdf_mp_gl', 'cdf_fortran',
 ps = [0.001, 0.01, 0.05, 0.5, 0.9, 0.99]
 ks = [3, 10, 20]
 nus = [1, 10, 120]
-
 # nu = 1, k =10
 
 # def wrapper(a, k, nu):
