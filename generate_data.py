@@ -62,7 +62,7 @@ nus = [1, 10, 120]
 #     import scipy.optimize as optimize
 #     # from scipy.stats import studentized_range
 #     def func(q, k, nu):
-#         return a - (1 - cdf_fortran(q , k, nu, dps=10)[0])
+#         return a - (1 - cdf_cython(q , k, nu, dps=10)[0])
 #     return optimize.root(func, 3, args=(k, nu))
 
 # combinations = dict()
@@ -85,7 +85,7 @@ nus = [1, 10, 120]
 #                 q = None
 #                 impossible_sets[p].append((q, k, nu))
 
-combinations = {
+combinations_old = {
     0.001: [(1476.5333964074937, 3, 1),
             (7.41070742788097, 3, 10),
             (5.21064641034589, 3, 120),
@@ -134,6 +134,18 @@ combinations = {
             (1.2720720538395054, 20, 1),
             (1.9422724694176192, 20, 10),
             (2.2151122178864724, 20, 120)]}
+
+# combinations that fortran was not able to compute
+combinations = {
+    .99: [(0.19191582566250495, 3, 1),
+         (0.19104171615970045, 3, 10),
+         (0.19094499182679212, 3, 120)
+         ],
+    .9: [(-0.6526254674216354, 3, 1),
+         (0.6216476924617348, 3, 10),
+         (-0.6183524806284062, 3, 120)
+        ]
+    }
 
 from mpmath import gamma, pi, erf, exp, sqrt, quad, inf, mpf
 from mpmath import npdf as phi
@@ -207,8 +219,8 @@ mp.dps = 25
 
 for i in range(len(truths)):
     if truths[i]:
-        fnameData = f"data/{names[i]}_data.txt"
-        fnameTime = f"data/{names[i]}_time.txt"
+        fnameData = f"data/{names[i]}_data1.txt"
+        fnameTime = f"data/{names[i]}_time1.txt"
         data = str(F_R[i])
         time = str(F_T[i])
         with open(fnameData, 'w+') as out_:

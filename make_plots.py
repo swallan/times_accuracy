@@ -26,7 +26,7 @@ names = ['cdf_dblquad', 'cdf_mp_ts', 'cdf_mp_gl', 'cdf_fortran',
 
 for name in names:
     try:
-        with open(f"data/{name}_data.txt", 'r') as in_:
+        with open(f"data/{name}_data1.txt", 'r') as in_:
             data = in_.read()
             data = data.replace('nan', '2')
             f = f'Fs["{name}"] = {data}'
@@ -34,7 +34,7 @@ for name in names:
     except Exception as e:
         print(f"[FileError] Data may not be loaded for {name}, errmsg= {e}")
     try:
-        with open(f"data/{name}_time.txt", 'r') as in_:
+        with open(f"data/{name}_time1.txt", 'r') as in_:
             data = in_.read()
             f = f'Ts["{name}"] = {data}'
             exec(f.replace('array', ''))
@@ -60,7 +60,12 @@ dpss = np.array(range(_min, _max, itr))
 
 err = []
 for key_comp in Fs['cdf_mp_ts']:
-    q, k, nu = key_comp.split("-")
+    strip = key_comp.split("-")
+    if len(strip) == 4:
+        q, k, nu = strip[1:]
+        q = '-' + q
+    else:
+        q, k, nu = strip
     print(key_comp)
     
     failed = []
