@@ -9,12 +9,9 @@ Created on Tue Dec  8 16:36:10 2020
 # -*- coding: utf-8 -*-
 
 from compute_cdf import (cdf_dblquad, cdf_mp_ts, cdf_mp_gl, cdf_fortran,
-                         cdf_cplusplus, cdf_statsmodel, cdf_cython)
+                         cdf_statsmodel, cdf_cython)
 import time
 import argparse
-import sys
-import concurrent.futures
-
 
 #%%
 
@@ -131,9 +128,6 @@ combinations = {
             (1.9422724694176192, 20, 10),
             (2.2151122178864724, 20, 120)]}
 
-from mpmath import gamma, pi, erf, exp, sqrt, quad, inf, mpf
-from mpmath import npdf as phi
-from mpmath import ncdf as Phi
 from mpmath import mp
 
 mp.dps = 25
