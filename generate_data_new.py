@@ -31,13 +31,15 @@ def dispatcher(process):
 
 if __name__ == '__main__':
     allStart = time.time()
-    dops = [6, 7]
-    pool_size = 5
-    data_file_path = "./data.p"
+    dops = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+            24, 25, 26]
+    pool_size = 10
 
     # Initialize the parser. Each gen + case can add custom flags in this stage.
     parser = argparse.ArgumentParser()
     parser.add_argument("--verbose", "-v", action="store_true")
+    parser.add_argument('--file', help='The output file for data',
+                        default="./data.p", required=False)
 
     genContainers = [gen.GenContainer for gen in gens.__all__]
 
@@ -47,6 +49,7 @@ if __name__ == '__main__':
 
     arg = parser.parse_args()
     print(arg)
+    data_file_path = arg.file
 
     # Pass cmd line args to all generator modules, to allow initialization.
     print("Initing generators")
@@ -90,7 +93,8 @@ if __name__ == '__main__':
 
         # Combine the results
         all_results = results + carried_results
-        print(f"Carried {len(carried_results)}/{len(prev_results)} old results.")
+        print(
+            f"Carried {len(carried_results)}/{len(prev_results)} old results.")
 
     print(f"Pickling to {data_file_path}")
     pickle.dump(all_results, open(data_file_path, "wb"))
