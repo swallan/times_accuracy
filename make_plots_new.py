@@ -1,28 +1,27 @@
 import numpy as np
 import pickle
 from Result import Result
-
-from mpmath import gamma, pi, erf, exp, sqrt, quad, inf, mpf
-from mpmath import npdf as phi
-from mpmath import ncdf as Phi
-from mpmath import mp
-
+import argparse
 import matplotlib.pyplot as plt
 
 availible_colors = ['c', 'm', 'y', 'k', 'r', 'g', 'b']
 
-reference_func = "cdf-mpgl"
+
+reference_func = "mpgl"
 data_file_path = "./data.p"
-mp.dps = 30
 
 results = pickle.load(open(data_file_path, "rb"))
 
 # Step 1: Identify all present functions
+# The function results for this set
 function_names = set([res.fname for res in results])
 
 if reference_func not in function_names:
     raise Exception(
         f"Selected reference function '{reference_func}' not found in data! Found {function_names}")
+
+
+
 
 # Step 2: Identify the maximum precision in the reference function.
 # Will warn if this is too small.
@@ -68,18 +67,38 @@ for case_uid, v1 in res_dict.items():
         color = func_colors[func_name]
         x = [r.dop for r in func_results]
         y = [abs(r.res - ref_y) for r in func_results]
-        t = [r.dt for r in func_results]
+        print(x)
+        print(y)
         plt.semilogy(x, y, label=func_name, marker='o', markersize=2, alpha=.7,
                      color=color)
     plt.legend()
 
-    plt.xticks(range(6, 26, 1))
+    plt.xticks(range(6, ref_dop, 1))
     plt.title(
         f"Magnitude Difference from {reference_func}@{ref_dop}: p={ref_res.case.p}\n"
-        f"q: {ref_res.case.q}, k: {ref_res.case.k}, nu: {ref_res.case.v}, ")
+        f"{ref_res.case}")
     plt.ylabel('magnitude difference')
     plt.xlabel('degree of precision')
 
     plt.savefig(f"images/{case_uid}_DATA.png", dpi=250)
+    plt.clf()
+    plt.close()
+
+    plt.figure(figsize=(9, 6), dpi=250)
+    for func_name, func_results in v1.items():
+        color = func_colors[func_name]
+        x = [r.dop for r in func_results]
+        t = [r.dt for r in func_results]
+        plt.semilogy(x, t, label=func_name, marker='o', markersize=2, alpha=.7,
+                     color=color)
+    plt.legend()
+
+    plt.xticks(range(6, ref_dop, 1))
+    plt.title(
+        f"Time for {reference_func}@{ref_res.case}")
+    plt.ylabel('Time (s)')
+    plt.xlabel('degree of precision')
+
+    plt.savefig(f"images/time/{case_uid}_TIME.png", dpi=250)
     plt.clf()
     plt.close()

@@ -1,14 +1,14 @@
 from argparse import ArgumentError
 
-from . import cdf_python, cdf_cython, cdf_fortran, cdf_mpgl, cdf_mpts
+from . import pdf_cython, pdf_mpgl, pdf_mpts
 
-gens = [cdf_python.Generator, cdf_cython.Generator, cdf_fortran.Generator, cdf_mpgl.Generator, cdf_mpts.Generator]
+gens = [pdf_cython.Generator, pdf_mpgl.Generator, pdf_mpts.Generator]
 
 
 class Case:
     def __init__(self, p, q, k, v):
         self.q, self.k, self.v, self.p = q, k, v, p
-        self.case_set = "cdf"
+        self.case_set = "pdf"
         self.uid = f"{self.case_set}-{p}-{q}-{k}-{v}"
 
     def __str__(self):
@@ -23,7 +23,7 @@ class GenContainer:
 
     cases = [
         # C(0.001, 1476.5333964074937, 3, 1),
-        #C(0.001, 7.41070742788097, 3, 10),
+        # C(0.001, 7.41070742788097, 3, 10),
         # C(0.001, 5.21064641034589, 3, 120),
         # C(0.001, 2435.021291209218, 10, 1),
         # C(0.001, 9.76993411237901, 10, 10),
@@ -42,9 +42,9 @@ class GenContainer:
         # C(0.01, 8.225917112372644, 20, 10),
         # C(0.01, 5.827186942720529, 20, 120),
         #
-        C(0.05, 26.96497723848384, 3, 1),
+        # C(0.05, 26.96497723848384, 3, 1),
         # C(0.05, 3.876778769063178, 3, 10),
-        # C(0.05, 3.3561384354345702, 3, 120),
+        C(0.05, 3.3561384354345702, 3, 120),
         # C(0.05, 49.090185505578575, 10, 1),
         # C(0.05, 5.598390407973096, 10, 10),
         # C(0.05, 4.559538018435397, 10, 120),
@@ -79,8 +79,8 @@ class GenContainer:
 
     @classmethod
     def init_parser(cls, parser):
-        parser.add_argument('--cdf', action='store_true',
-                            help="Enable CDF data generation.")
+        parser.add_argument('--pdf', action='store_true',
+                            help="Enable PDF data generation.")
 
         for gen in gens:
             try:
@@ -91,7 +91,7 @@ class GenContainer:
 
     @classmethod
     def init_args(cls, arg):
-        cls.enabled = arg.cdf
+        cls.enabled = arg.pdf
 
         for gen in gens:
             gen.init_args(arg)

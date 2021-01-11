@@ -16,4 +16,4 @@ class Generator:
     def process(case, dop):
         q, k, nu = case.q, case.k, case.v
         stats.distributions.studentized_range._epsabs = 10 ** -dop
-        return stats.distributions.studentized_range.cdf(q, k, nu).item()
+        return stats.distributions.studentized_range.pdf(q, k, nu)

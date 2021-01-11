@@ -31,16 +31,15 @@ def dispatcher(process):
 
 if __name__ == '__main__':
     allStart = time.time()
-    dops = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-            24, 25, 26]
-    pool_size = 10
+    dops = range(6, 26)
 
     # Initialize the parser. Each gen + case can add custom flags in this stage.
     parser = argparse.ArgumentParser()
     parser.add_argument("--verbose", "-v", action="store_true")
     parser.add_argument('--file', help='The output file for data',
                         default="./data.p", required=False)
-
+    parser.add_argument('--pool', "-p", help='Number of pool processes',
+                        default=5, type=int, required=False)
     genContainers = [gen.GenContainer for gen in gens.__all__]
 
     print("Initing arg-parser")
@@ -49,6 +48,8 @@ if __name__ == '__main__':
 
     arg = parser.parse_args()
     print(arg)
+    pool_size = arg.pool
+
     data_file_path = arg.file
 
     # Pass cmd line args to all generator modules, to allow initialization.
@@ -58,6 +59,8 @@ if __name__ == '__main__':
 
     print("Collecting cases")
     processes = [gen.collect_processes() for gen in genContainers]
+    processes = [proc for proc in processes if proc is not None] # Filter None
+    # print(processes)
 
     # Collapse the passed lists into a 1-d array of operations.
     processes = list(itertools.chain.from_iterable(processes))

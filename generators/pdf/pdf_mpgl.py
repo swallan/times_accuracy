@@ -3,18 +3,18 @@ from mpmath import npdf as phi
 from mpmath import ncdf as Phi
 from mpmath import mp
 
-def cdf_mp(q, k, nu, method, error=True, dps=15):
+def pdf_mp(q, k, nu, method, error=True, dps=15):
     mp.dps = dps
     q, k, nu = mpf(q), mpf(k), mpf(nu)
 
-    def inner(s, z):
-        return phi(z)*(Phi(z+q*s)-Phi(z))**(k-1)
-
-    def outer(s, z):
-        return s**(nu-1)*phi(sqrt(nu)*s)*inner(s, z)
+    def integral(s, z):
+        return k * (k - 1) * s * phi(z) * phi(s * q + z) \
+               * (Phi(s * q + z) - Phi(z)) ** (k - 2)
 
     def whole(s, z):
-        return sqrt(2*pi)*k*nu**(nu/2) / (gamma(nu/2)*2**(nu/2-1))*outer(s, z)
+        return nu ** (nu / 2) / (gamma(nu / 2) * 2 ** (nu / 2 - 1)) * s ** (
+                    nu - 1) * exp(-nu * s ** 2 / 2) * integral(s, z)
+
     res = quad(whole, [0, inf], [-inf, inf], error=error,
                method=method, maxdegree=10)
     return res
@@ -36,4 +36,4 @@ class Generator:
     def process(case, dop):
         q, k, nu = case.q, case.k, case.v
 
-        return cdf_mp(q, k, nu, method='gauss-legendre', dps=dop)[0]
+        return pdf_mp(q, k, nu, method='gauss-legendre', dps=dop)[0]

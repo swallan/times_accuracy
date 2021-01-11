@@ -9,7 +9,7 @@ Phi = stats.distributions.norm.cdf
 
 class Generator:
     enabled = False
-    display_name = "cdf-python"
+    display_name = "python"
 
     @staticmethod
     def init_parser(parser):
