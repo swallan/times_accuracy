@@ -66,21 +66,23 @@ for case_uid, v1 in res_dict.items():
     for func_name, func_results in v1.items():
         color = func_colors[func_name]
         x = [r.dop for r in func_results]
-        y = [abs(r.res - ref_y) for r in func_results]
-        print(x)
-        print(y)
+        y = [abs((r.res - ref_y) / ref_y) for r in func_results]
         plt.semilogy(x, y, label=func_name, marker='o', markersize=2, alpha=.7,
-                     color=color)
+                 color=color)
+
     plt.legend()
 
     plt.xticks(range(6, ref_dop, 1))
     plt.title(
-        f"Magnitude Difference from {reference_func}@{ref_dop}: p={ref_res.case.p}\n"
+        f"Magnitude Difference (relative) from {reference_func}@{ref_dop}\n"
         f"{ref_res.case}")
     plt.ylabel('magnitude difference')
     plt.xlabel('degree of precision')
 
-    plt.savefig(f"images/{case_uid}_DATA.png", dpi=250)
+    try:
+        plt.savefig(f"images/{case_uid}_DATA.png", dpi=250)
+    except ValueError:
+        print(f"Value err creating {case_uid}. The graph will not be made.")
     plt.clf()
     plt.close()
 
