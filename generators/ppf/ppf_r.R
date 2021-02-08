@@ -8,7 +8,7 @@ if (length(args)<=2) {
 }
 
 start.time <- Sys.time()
-res <- ptukey(as.numeric(args[1]), nmeans = as.numeric(args[2]), df = as.numeric(args[3]))
+res <- qtukey(as.numeric(args[1]), nmeans = as.numeric(args[2]), df = as.numeric(args[3]))
 end.time <- Sys.time()
 time.taken <- end.time - start.time
 sprintf("%.22g,%.22g", res, time.taken)

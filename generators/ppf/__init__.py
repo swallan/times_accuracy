@@ -1,14 +1,14 @@
 from argparse import ArgumentError
 
-from . import cdf_python, cdf_cython, cdf_statsmodel, cdf_mpgl, cdf_mpts, cdf_R, cdf_pingouin
+from . import cython, statsmodel, mpgl, mpts, R, pingouin
 
-gens = [cdf_python.Generator, cdf_cython.Generator, cdf_statsmodel.Generator, cdf_mpgl.Generator, cdf_mpts.Generator, cdf_R.Generator, cdf_pingouin.Generator]
+gens = [cython.Generator, statsmodel.Generator, mpgl.Generator, mpts.Generator, R.Generator, pingouin.Generator]
 
 
 class Case:
     def __init__(self, p, q, k, v):
         self.q, self.k, self.v, self.p = q, k, v, p
-        self.case_set = "cdf"
+        self.case_set = "ppf"
         self.uid = f"{self.case_set}-{p}-{q}-{k}-{v}"
 
     def __str__(self):
@@ -79,7 +79,7 @@ class GenContainer:
 
     @classmethod
     def init_parser(cls, parser):
-        parser.add_argument('--cdf', action='store_true',
+        parser.add_argument('--ppf', action='store_true',
                             help="Enable CDF data generation.")
 
         for gen in gens:
@@ -91,7 +91,7 @@ class GenContainer:
 
     @classmethod
     def init_args(cls, arg):
-        cls.enabled = arg.cdf
+        cls.enabled = arg.ppf
 
         for gen in gens:
             gen.init_args(arg)

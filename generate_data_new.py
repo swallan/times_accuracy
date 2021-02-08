@@ -6,6 +6,8 @@ import pickle
 import os
 from Result import Result
 from multiprocessing import Pool
+import sys
+import numpy as np
 
 
 def dispatcher(process):
@@ -16,11 +18,19 @@ def dispatcher(process):
         res = f.process(case, dop)
         dt = time.time() - s
 
-    except OverflowError as e:
-        err = e
+        # Process can return tuple in form of (result, time)
+        if type(res) is tuple:
+            dt = res[1]
+            res = res[0]
+        result = Result(res, dop=dop, src_case=case, fname=f.display_name,
+                        dt=dt,
+                        err=err)
+    except:
+        err = sys.exc_info()[0]
+        result = Result(np.nan, dop=dop, src_case=case, fname=f.display_name,
+                        dt=dt,
+                        err=err)
 
-    result = Result(res, dop=dop, src_case=case, fname=f.display_name, dt=dt,
-                    err=err)
     if verbose:
         print(result)
     else:
@@ -59,7 +69,7 @@ if __name__ == '__main__':
 
     print("Collecting cases")
     processes = [gen.collect_processes() for gen in genContainers]
-    processes = [proc for proc in processes if proc is not None] # Filter None
+    processes = [proc for proc in processes if proc is not None]  # Filter None
     # print(processes)
 
     # Collapse the passed lists into a 1-d array of operations.
@@ -103,3 +113,4 @@ if __name__ == '__main__':
     pickle.dump(all_results, open(data_file_path, "wb"))
 
     print(f"Done in {time.time() - allStart} seconds!")
+

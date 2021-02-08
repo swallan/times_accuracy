@@ -16,9 +16,10 @@ class Generator:
 
     @staticmethod
     def process(case, dop):
-        q, k, nu = case.q, case.k, case.v
+
+        p, k, nu = case.p, case.k, case.v
         prc = subprocess.run(
-            ['Rscript', 'generators/cdf/ppf_r.R', f'{q:.22f}', f'{k:.22f}',
+            ['Rscript', 'generators/cdf/ppf_r.R', f'{p:.22f}', f'{k:.22f}',
              f'{nu:.22f}'],
             stdout=subprocess.PIPE,
             universal_newlines=True)
@@ -26,5 +27,5 @@ class Generator:
         # Parse the command line output, b/c why not.
         parts = re.split('\[|\]|"|,|\s', prc.stdout)
         parts = list(filter(None, parts))  # Filter blank fields
-
-        return float(parts[1]), float(parts[2])
+        res = float(parts[1]), float(parts[2])
+        return res
