@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import statistics
+from tabulate import tabulate
+import math
 
 # Ensure folder existance
 if not os.path.exists('images'):
@@ -64,22 +66,36 @@ for case_uid, v1 in res_dict.items():
         stats_dict.setdefault(case_set, {})
         stats_dict[case_set].setdefault(func_name, {})
 
-        stats_dict[case_set][func_name].setdefault("total_err", 0)
-        stats_dict[case_set][func_name].setdefault("total_results", 0)
-        stats_dict[case_set][func_name].setdefault("mode_arr", [])
+        func_stat_dict = stats_dict[case_set][func_name]
+        func_stat_dict.setdefault("total_err", 0)
+        func_stat_dict.setdefault("total_results", 0)
+        func_stat_dict.setdefault("mode_arr", [])
+        func_stat_dict.setdefault("worst_err", -np.inf)
+        func_stat_dict.setdefault("best_err", np.inf)
 
-        print(stats_dict[case_set][func_name])
-        stats_res = next(filter(lambda r: r.dop == stats_target_dop,
-                                res_dict[case_uid][func_name]), None)
 
+        # The corrosponding results for this function and case, at the statistics DOP
+        stats_res = next(
+            filter(lambda r: r.dop == stats_target_dop, func_results), None)
+
+        # The max precision result for this case given by the reference function.
         ref_res = max(v1[reference_func], key=lambda r: r.dop)
+        if (stats_res and ref_res) and (not math.isnan(stats_res.res)) and (not stats_res.err):
+            err = float(abs(stats_res.res - ref_res.res))
+            #print(stats_res.res)
+            # These two are used to calculate an average eventually.
+            func_stat_dict["total_err"] += err
+            func_stat_dict["total_results"] += 1
 
-        if stats_res and ref_res and stats_res.res != np.nan and not stats_res.err:
-            stats_dict[case_set][func_name]["total_err"] += float(abs(
-                stats_res.res - ref_res.res))
-            stats_dict[case_set][func_name]["total_results"] += 1
-            stats_dict[case_set][func_name]["mode_arr"]\
-                .append(float(abs(stats_res.res - ref_res.res)))
+            # An array of raw error values. Used to calculate the mode.
+            func_stat_dict["mode_arr"].append(err)
+
+            # The worst seen error.
+            if err > stats_dict[case_set][func_name]["worst_err"]:
+                stats_dict[case_set][func_name]["worst_err"] = err
+
+            if err < stats_dict[case_set][func_name]["best_err"]:
+                stats_dict[case_set][func_name]["best_err"] = err
 
 # Assign a color to each function name, for consistancy across graphs
 func_colors = {func: availible_colors.pop() for func in seen_funcs}
@@ -99,7 +115,7 @@ for case_uid, v1 in res_dict.items():
     for func_name, func_results in v1.items():
         color = func_colors[func_name]
         x = [r.dop for r in func_results]
-        y = [abs((r.res - ref_y) / ref_y) for r in func_results]
+        y = [abs(r.res - ref_y) for r in func_results]
         plt.semilogy(x, y, label=func_name, marker='o', markersize=2, alpha=.7,
                      color=color)
 
@@ -138,16 +154,33 @@ for case_uid, v1 in res_dict.items():
     plt.clf()
     plt.close()
 
-print("Writing statistics files")
 
+print("Writing statistics files")
 for case_set, function_stat_dict in stats_dict.items():
     f = open(f"stats/{case_set}.txt", "w")
-    f.write(
-        f"============STATS FOR {case_set} @ dop={stats_target_dop}============\n")
+    f.write(f"============STATS FOR {case_set} @ dop={stats_target_dop}============\n")
+    f.write(f"(Note: nan/errored results are not included in these statistics)\n")
+    table = []
     for function_name, stats_dict in function_stat_dict.items():
+        # Don't write anything if no valid results
         if stats_dict['total_results'] > 0:
             np.seterr(divide='ignore')
-            mode = statistics.mode(np.round(np.log10(stats_dict["mode_arr"])))
-            f.write(
-                f"{function_name}\tAverage abs. err = {stats_dict['total_err'] / stats_dict['total_results']}\tTypical Precision: {mode}\n")
+
+            res_tbl = [
+                function_name,
+
+                # Average Error
+                stats_dict['total_err'] / stats_dict['total_results'],
+
+                # Mode
+                statistics.mode(np.round(np.log10(stats_dict["mode_arr"]))),
+
+                # Worst seen error.
+                stats_dict['worst_err'],
+
+                # Worst seen error.
+                stats_dict['best_err']
+            ]
+            table.append(res_tbl)
+    f.write(tabulate(table, headers=["Function", "Avg. Err", "Mode", "Worst Err", "Best Err"]))
     f.close()

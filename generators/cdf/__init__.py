@@ -1,8 +1,8 @@
 from argparse import ArgumentError
 
-from . import cdf_python, cdf_cython, cdf_statsmodel, cdf_mpgl, cdf_mpts, cdf_R, cdf_pingouin
+from . import cdf_python, cdf_cython, cdf_statsmodel, cdf_mpgl, cdf_mpts, cdf_R
 
-gens = [cdf_python.Generator, cdf_cython.Generator, cdf_statsmodel.Generator, cdf_mpgl.Generator, cdf_mpts.Generator, cdf_R.Generator, cdf_pingouin.Generator]
+gens = [cdf_python.Generator, cdf_cython.Generator, cdf_statsmodel.Generator, cdf_mpgl.Generator, cdf_mpts.Generator, cdf_R.Generator]
 
 
 class Case:

@@ -1,8 +1,8 @@
 from argparse import ArgumentError
 
-from . import cython, statsmodel, mpgl, mpts, R, pingouin
+from . import cython, statsmodel, mpgl, mpts, R
 
-gens = [cython.Generator, statsmodel.Generator, mpgl.Generator, mpts.Generator, R.Generator, pingouin.Generator]
+gens = [cython.Generator, statsmodel.Generator, mpgl.Generator, mpts.Generator, R.Generator]
 
 
 class Case:
