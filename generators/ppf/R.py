@@ -19,7 +19,7 @@ class Generator:
 
         p, k, nu = case.p, case.k, case.v
         prc = subprocess.run(
-            ['Rscript', 'generators/cdf/ppf_r.R', f'{p:.22f}', f'{k:.22f}',
+            ['Rscript', 'generators/ppf/ppf_r.R', f'{p:.22f}', f'{k:.22f}',
              f'{nu:.22f}'],
             stdout=subprocess.PIPE,
             universal_newlines=True)

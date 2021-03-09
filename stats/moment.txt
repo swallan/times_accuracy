@@ -1,0 +1,6 @@
+============STATS FOR moment @ dop=11============
+(Note: nan/errored results are not included in these statistics)
+Function       Avg. Err    Mode    Worst Err     Best Err
+----------  -----------  ------  -----------  -----------
+cython      3.77238e-10      -9  3.77238e-10  3.77238e-10
+mpgl        6.12238e-10      -9  6.12238e-10  6.12238e-10

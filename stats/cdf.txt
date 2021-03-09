@@ -1,0 +1,10 @@
+============STATS FOR cdf @ dop=11============
+(Note: nan/errored results are not included in these statistics)
+Function       Avg. Err    Mode    Worst Err     Best Err
+----------  -----------  ------  -----------  -----------
+R           3.76058e-09     -10  6.27874e-08  2.33186e-14
+pingouin    0.113078         -2  0.890403     2.06076e-09
+cython      1.19647e-15     -15  6.65741e-15  7.56726e-19
+statsmodel  0.103019         -5  0.890403     2.06076e-09
+mpts        8.93068e-10     -12  3.14579e-08  9.9742e-15
+mpgl        8.47104e-11     -12  3.87446e-09  1.80617e-16

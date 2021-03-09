@@ -1,0 +1,7 @@
+============STATS FOR pdf @ dop=11============
+(Note: nan/errored results are not included in these statistics)
+Function       Avg. Err    Mode    Worst Err     Best Err
+----------  -----------  ------  -----------  -----------
+mpts        2.86873e-08     -13  6.1944e-07   2.55367e-17
+cython      2.86781e-08     -14  6.1944e-07   1.75803e-16
+mpgl        2.91588e-12     -13  4.27042e-11  0

@@ -15,5 +15,5 @@ class Generator:
     @staticmethod
     def process(case, dop):
         m, k, nu = case.m, case.k, case.v
-        stats.distributions.studentized_range._epsabs = 10 ** -dop
+        #stats.distributions.studentized_range._epsabs = 10 ** -dop
         return stats.distributions.studentized_range.moment(m, k, nu)

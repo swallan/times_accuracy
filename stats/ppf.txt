@@ -1,0 +1,10 @@
+============STATS FOR ppf @ dop=11============
+(Note: nan/errored results are not included in these statistics)
+Function         Avg. Err    Mode      Worst Err     Best Err
+----------  -------------  ------  -------------  -----------
+R           nan                -8    0.120496     1.88662e-10
+pingouin    nan                -1  285.936        0.00207423
+cython      nan               -15    0.885573     2.56703e-18
+mpts        nan               -12    1.21071e-07  1.01059e-13
+statsmodel  nan                -3    0.083506     8.72661e-05
+mpgl          1.29448e-09     -12    2.1034e-08   3.75852e-14

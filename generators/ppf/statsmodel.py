@@ -15,4 +15,7 @@ class Generator:
     @staticmethod
     def process(case, dop):
         p, k, nu = case.p, case.k, case.v
-        return qsturng(p, k, nu)
+        res = qsturng(p, k, nu)
+        #print(res)
+        return res
+

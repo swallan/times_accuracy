@@ -9,12 +9,16 @@ import statistics
 from tabulate import tabulate
 import math
 
-# Ensure folder existance
-if not os.path.exists('images'):
-    os.makedirs('images')
 
-if not os.path.exists('stats'):
-    os.makedirs('stats')
+def ensure_dir(dir):
+    import os
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+
+
+# Ensure folder existance
+ensure_dir("images")
+ensure_dir("stats")
 
 availible_colors = ['c', 'm', 'y', 'k', 'r', 'g', 'b']
 
@@ -24,8 +28,14 @@ stats_target_dop = 11
 
 results = pickle.load(open(data_file_path, "rb"))
 
-# Step 1: Identify all present functions
+# Identify all present functions
 function_names = set([res.fname for res in results])
+set_names = set([res.case.case_set.upper() for res in results])
+
+# Ensure directories for each function name, so we can write images later
+for set_name in set_names:
+    ensure_dir(f"images/{set_name}")
+    ensure_dir(f"images/{set_name}/times")
 
 # Check if reference_func is present in the function names at all.
 if reference_func not in function_names:
@@ -106,6 +116,7 @@ for case_uid, v1 in res_dict.items():
     # The max-DOP result for the reference function
     ref_res = max(v1[reference_func], key=lambda r: r.dop)
 
+    ref_set_name = ref_res.case.case_set
     ref_y = ref_res.res
     ref_dop = ref_res.dop
 
@@ -129,7 +140,7 @@ for case_uid, v1 in res_dict.items():
     plt.xlabel('degree of precision')
 
     try:
-        plt.savefig(f"images/{case_uid}_DATA.png", dpi=250)
+        plt.savefig(f"images/{ref_set_name}/{case_uid}_DATA.png", dpi=250)
     except ValueError:
         print(f"Value err creating {case_uid}. The graph will not be made.")
     plt.clf()
@@ -150,7 +161,7 @@ for case_uid, v1 in res_dict.items():
     plt.ylabel('Time (s)')
     plt.xlabel('degree of precision')
 
-    plt.savefig(f"images/time/{case_uid}_TIME.png", dpi=250)
+    plt.savefig(f"images/{ref_set_name}/times/{case_uid}_TIME.png", dpi=250)
     plt.clf()
     plt.close()
 
